@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduLance | Home</title>
 
+    <!-- Shared CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+<!-- ========== NAVBAR ========== -->
 <header>
     <nav class="navbar">
         <div class="logo">EduLance</div>
@@ -19,13 +23,18 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="projects.html">Projects</a></li>
             <li><a href="add_projects.html">Post Project</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html" class="register-btn">Register</a></li>
             <li>
-                <button id="logoutBtn" onclick="logout()">Logout</button>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+                    Logout
+                </button>
             </li>
         </ul>
     </nav>
 </header>
 
+<!-- ========== HERO SECTION ========== -->
 <section class="hero">
     <div class="hero-content">
         <h1>Connect Clients with Skilled Freelancers</h1>
@@ -41,37 +50,42 @@
     </div>
 </section>
 
+<!-- ========== FEATURES SECTION ========== -->
 <section class="features">
     <h2>Platform Features</h2>
 
     <div class="feature-container">
         <div class="feature-card">
             <h3>Skill-Based Matching</h3>
-            <p>Match freelancers and projects based on skills.</p>
+            <p>Freelancers see projects tailored to their saved skills.</p>
         </div>
 
         <div class="feature-card">
             <h3>Easy Project Posting</h3>
-            <p>Clients can quickly post projects.</p>
+            <p>Clients can quickly post projects with required skills and budget.</p>
         </div>
 
         <div class="feature-card">
             <h3>Professional Profiles</h3>
-            <p>Showcase skills and manage projects.</p>
+            <p>Showcase skills, manage projects, and build credibility.</p>
         </div>
     </div>
 </section>
 
+<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <p>© 2026 EduLance — IT Engineering Mini Project</p>
 </footer>
 
-<!-- Firebase -->
+<!-- ================= FIREBASE SDKs ================= -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+<!-- Firebase Config -->
 <script src="firebase-config.js"></script>
+
+<!-- App Logic (ALWAYS LAST) -->
 <script src="app.js"></script>
 
 </body>

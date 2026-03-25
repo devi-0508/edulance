@@ -25,14 +25,17 @@
             <li><a href="add_projects.html">Post Project</a></li>
             <li><a href="login.html">Login</a></li>
             <li><a href="register.html" class="register-btn">Register</a></li>
+            <li>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+                    Logout
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
 
-
 <!-- ========== REGISTER SECTION ========== -->
 <section class="register-section">
-
     <h2>Create Your Account</h2>
 
     <!-- Firebase Email Registration -->
@@ -71,9 +74,7 @@
         </select>
 
         <!-- Register Button -->
-        <button type="submit">
-            Create Account
-        </button>
+        <button type="submit">Create Account</button>
 
         <p style="margin-top:15px; text-align:center;">
             Already have an account?
@@ -83,19 +84,15 @@
         <p style="text-align:center; font-size:14px; opacity:0.7;">
             A verification email will be sent after registration.
         </p>
-
     </form>
 </section>
-
 
 <!-- ========== FOOTER ========== -->
 <footer class="footer">
     <p>© 2026 EduLance — IT Engineering Mini Project</p>
 </footer>
 
-
 <!-- ================= FIREBASE SDKs ================= -->
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>

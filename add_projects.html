@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduLance | Add Project</title>
+    <title>EduLance | Post Project</title>
 
     <!-- Shared CSS -->
     <link rel="stylesheet" href="style.css">
@@ -14,76 +14,84 @@
 
 <body>
 
-    <!-- ========== NAVBAR ========== -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">EduLance</div>
+<!-- ========== NAVBAR ========== -->
+<header>
+    <nav class="navbar">
+        <div class="logo">EduLance</div>
 
-            <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="projects.html">Projects</a></li>
-    <li><a href="add_projects.html">Post Project</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="register.html" class="register-btn">Register</a></li>
-</ul>
-        </nav>
-    </header>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="add_projects.html">Post Project</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html" class="register-btn">Register</a></li>
+            <li>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+                    Logout
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
 
+<!-- ========== ADD PROJECT FORM ========== -->
+<section>
+    <h2>Post a New Project</h2>
+    <p>Fill in the details below to post your project and connect with freelancers.</p>
 
-    <!-- ========== ADD PROJECT FORM ========== -->
-    <section>
-        <h2>Post a New Project</h2>
+    <form id="addProjectForm">
+        <!-- Project Title -->
+        <input
+            type="text"
+            id="projectTitle"
+            placeholder="Project Title"
+            required
+        >
 
-        <!-- IDs prepared for Firebase integration -->
-        <form id="addProjectForm">
+        <!-- Project Description -->
+        <textarea
+            id="projectDescription"
+            placeholder="Project Description"
+            required
+        ></textarea>
 
-            <input
-                type="text"
-                id="projectTitle"
-                placeholder="Project Title"
-                required
-            >
+        <!-- Required Skills -->
+        <input
+            type="text"
+            id="projectSkills"
+            placeholder="Required Skills (comma separated: HTML, CSS, JS)"
+            required
+        >
 
-            <textarea
-                id="projectDescription"
-                placeholder="Project Description"
-                required
-            ></textarea>
+        <!-- Budget -->
+        <input
+            type="number"
+            id="projectBudget"
+            placeholder="Budget (₹)"
+            required
+        >
 
-            <input
-                type="text"
-                id="projectSkills"
-                placeholder="Required Skills (comma separated: HTML, CSS, JS)"
-                required
-            >
+        <!-- Submit Button -->
+        <button type="submit">Post Project</button>
+    </form>
 
-            <input
-                type="number"
-                id="projectBudget"
-                placeholder="Budget (₹)"
-                required
-            >
+    <p id="projectMessage" style="margin-top:15px; text-align:center;"></p>
+</section>
 
-            <button type="submit">Post Project</button>
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <p>© 2026 EduLance — IT Engineering Mini Project</p>
+</footer>
 
-        </form>
-    </section>
-
-
-    <!-- ========== FOOTER ========== -->
-    <footer class="footer">
-        <p>© 2026 FreelanceHub — IT Engineering Mini Project</p>
-    </footer>
-
-    <!-- Firebase SDK (compat) -->
+<!-- ================= FIREBASE SDKs ================= -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<!-- Firebase init -->
+<!-- Firebase Config -->
 <script src="firebase-config.js"></script>
 
-<!-- YOUR CODE (ALWAYS LAST) -->
+<!-- App Logic (ALWAYS LAST) -->
 <script src="app.js"></script>
 
 </body>

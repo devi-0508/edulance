@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freelancer Profile | EduLance</title>
 
+    <!-- Shared CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+<!-- ========== NAVBAR ========== -->
 <header>
     <nav class="navbar">
         <div class="logo">EduLance</div>
@@ -18,17 +23,19 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="projects.html">Projects</a></li>
             <li>
-                <button id="logoutBtn" onclick="logout()">Logout</button>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+                    Logout
+                </button>
             </li>
         </ul>
     </nav>
 </header>
 
+<!-- ========== FREELANCER SKILLS SECTION ========== -->
 <section id="skillsSection" style="display:none; text-align:center; padding:40px;">
     <h2>Your Skills</h2>
 
     <div class="skills-list">
-
         <input type="checkbox" id="java" value="Java">
         <label for="java">Java</label>
 
@@ -46,23 +53,34 @@
 
         <input type="checkbox" id="uiux" value="UI/UX">
         <label for="uiux">UI/UX</label>
-
     </div>
 
     <br>
     <button onclick="saveSkills()">Save Skills</button>
 </section>
 
+<!-- ========== MATCHED PROJECTS SECTION ========== -->
+<section id="matchedProjectsSection" style="display:none; text-align:center; padding:40px;">
+    <h2>Matched Projects</h2>
+    <div class="card-container" id="projectsContainer">
+        <!-- JS will insert matched projects here -->
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <p>© 2026 EduLance — IT Engineering Mini Project</p>
 </footer>
 
-<!-- Firebase -->
+<!-- ================= FIREBASE SDKs ================= -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+<!-- Firebase Config -->
 <script src="firebase-config.js"></script>
+
+<!-- App Logic (ALWAYS LAST) -->
 <script src="app.js"></script>
 
 </body>

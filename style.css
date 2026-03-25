@@ -13,32 +13,34 @@
 body {
     background-color: #f4f6f8;
     color: #333;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-
 /* ===============================
-   NAVBAR (ALL PAGES)
+   NAVBAR
 ================================= */
 .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .logo {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    color: #2c3e50;
+    color: #0077ff;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 25px;
 }
 
 .nav-links a {
@@ -55,13 +57,17 @@ body {
 .register-btn {
     background: #0077ff;
     color: white !important;
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: 6px;
+    transition: 0.3s;
 }
 
+.register-btn:hover {
+    background: #005fd1;
+}
 
 /* ===============================
-   HERO SECTION (HOME PAGE)
+   HERO SECTION
 ================================= */
 .hero {
     height: 80vh;
@@ -75,42 +81,45 @@ body {
 }
 
 .hero-content h1 {
-    font-size: 42px;
-    margin-bottom: 15px;
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
 
 .hero-content p {
     font-size: 18px;
-    max-width: 600px;
+    max-width: 650px;
     margin: auto;
+    opacity: 0.9;
 }
 
 .hero-buttons {
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
-
 /* ===============================
-   BUTTON SYSTEM (USED EVERYWHERE)
+   BUTTONS
 ================================= */
 .primary-btn,
 .secondary-btn {
     text-decoration: none;
-    padding: 12px 20px;
+    padding: 12px 22px;
     border-radius: 8px;
     margin: 5px;
     display: inline-block;
     font-weight: 600;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
 .primary-btn {
     background: #ffffff;
     color: #0077ff;
+    border: 2px solid transparent;
 }
 
 .primary-btn:hover {
     background: #e6f0ff;
+    border-color: #0077ff;
 }
 
 .secondary-btn {
@@ -123,61 +132,38 @@ body {
     background: rgba(255,255,255,0.2);
 }
 
-
 /* ===============================
-   SECTION GENERIC STYLE
+   CARDS
 ================================= */
-section {
-    padding: 60px 40px;
-    text-align: center;
-}
-
-section h2 {
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: #2c3e50;
-}
-
-
-/* ===============================
-   FEATURE CARDS (HOME + PROJECTS)
-================================= */
-.feature-container,
-.card-container,
-.steps {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
-}
-
+.project-card,
 .feature-card,
-.card,
-.step {
+.card {
     background: white;
     padding: 25px;
-    border-radius: 10px;
-    width: 280px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: 0.3s;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
 }
 
+.project-card:hover,
 .feature-card:hover,
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
-
 /* ===============================
-   FORMS (LOGIN / REGISTER / ADD PROJECT)
+   FORMS
 ================================= */
 form {
-    max-width: 400px;
+    max-width: 420px;
     margin: auto;
     background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
 input,
@@ -185,10 +171,10 @@ textarea,
 select {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    margin: 12px 0;
     border-radius: 6px;
     border: 1px solid #ccc;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 textarea {
@@ -212,91 +198,29 @@ button:hover {
     background: #005fd1;
 }
 
-
-/* ===============================
-   PROFILE PAGES (CLIENT/FREELANCER)
-================================= */
-.profile-container {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    text-align: left;
-}
-
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.profile-avatar {
-    width: 80px;
-    height: 80px;
-    background: #0077ff;
-    border-radius: 50%;
-}
-
-.profile-info h3 {
-    margin-bottom: 5px;
-}
-
-.skill-tags {
-    margin-top: 10px;
-}
-
-.skill-tags span {
-    display: inline-block;
-    background: #e6f0ff;
-    color: #0077ff;
-    padding: 6px 10px;
-    border-radius: 6px;
-    margin: 4px;
-    font-size: 13px;
-}
-
-
-/* ===============================
-   CALL TO ACTION
-================================= */
-.cta {
-    background: #0077ff;
-    color: white;
-}
-
-.cta h2 {
-    color: white;
-    margin-bottom: 10px;
-}
-
-
 /* ===============================
    FOOTER
 ================================= */
 .footer {
     background: #2c3e50;
-    color: white;
+    color: #ddd;
     text-align: center;
-    padding: 20px;
+    padding: 25px;
     margin-top: 40px;
+    font-size: 14px;
 }
 
-
 /* ===============================
-   RESPONSIVE DESIGN
+   RESPONSIVE
 ================================= */
 @media (max-width: 768px) {
-
     .navbar {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
 
     .hero-content h1 {
-        font-size: 30px;
+        font-size: 32px;
     }
 
     section {
@@ -308,45 +232,8 @@ button:hover {
         flex-direction: column;
         align-items: center;
     }
-}
 
-.skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-/* hide default checkbox */
-.skills-list input {
-    display: none;
-}
-
-/* default chip */
-.skills-list label {
-    padding: 10px 15px;
-    border-radius: 20px;
-    background: #eee;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: 500;
-}
-
-/* selected chip */
-.skills-list input:checked + label {
-    background: #4CAF50;
-    color: white;
-}
-
-.logout-btn {
-    background: #ff4d4d;
-    padding: 8px 14px;
-    border-radius: 6px;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.logout-btn:hover {
-    background: #cc0000;
+    .project-card {
+        width: 100%;
+    }
 }

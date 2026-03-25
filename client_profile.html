@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Profile | EduLance</title>
 
+    <!-- Shared CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<!-- ========== NAVBAR ========== -->
 <header>
     <nav class="navbar">
         <div class="logo">EduLance</div>
@@ -20,47 +23,77 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="projects.html">Projects</a></li>
             <li><a href="client_profile.html">Dashboard</a></li>
+            <li>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+                    Logout
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
 
-
-<section>
+<!-- ========== CLIENT DASHBOARD ========== -->
+<section class="profile-container">
     <h2>Client Dashboard</h2>
+    <p>Post new projects and manage your existing ones.</p>
 
-    <input
-        type="text"
-        id="projectTitle"
-        placeholder="Project Title"
-    >
+    <!-- Project Posting Form -->
+    <form id="addProjectForm">
+        <input
+            type="text"
+            id="projectTitle"
+            placeholder="Project Title"
+            required
+        >
 
-    <textarea
-        id="projectSkills"
-        placeholder="Required Skills (comma separated)"
-        rows="4"
-    ></textarea>
+        <textarea
+            id="projectDescription"
+            placeholder="Project Description"
+            required
+        ></textarea>
 
-    <br><br>
+        <input
+            type="text"
+            id="projectSkills"
+            placeholder="Required Skills (comma separated: HTML, CSS, JS)"
+            required
+        >
 
-    <button onclick="postProject()">Post Project</button>
+        <input
+            type="number"
+            id="projectBudget"
+            placeholder="Budget (₹)"
+            required
+        >
 
-    <p id="projectMessage"></p>
+        <button type="submit">Post Project</button>
+    </form>
+
+    <p id="projectMessage" style="margin-top:15px; text-align:center;"></p>
+
+    <!-- Client's Posted Projects -->
+    <section style="margin-top:40px;">
+        <h3>My Posted Projects</h3>
+        <div class="card-container" id="clientProjectsContainer">
+            <!-- JS will insert client’s projects here -->
+        </div>
+    </section>
 </section>
 
-
+<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <p>© 2026 EduLance — IT Engineering Mini Project</p>
 </footer>
 
-<!-- Firebase SDK (compat) -->
+<!-- ================= FIREBASE SDKs ================= -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<!-- Firebase init -->
+<!-- Firebase Config -->
 <script src="firebase-config.js"></script>
 
-<!-- YOUR CODE (ALWAYS LAST) -->
+<!-- App Logic (ALWAYS LAST) -->
 <script src="app.js"></script>
 
 </body>
