@@ -94,6 +94,12 @@ firebase.auth().onAuthStateChanged(async (user) => {
     const skillsSection = document.getElementById("skillsSection");
     const currentPage = window.location.pathname;
 
+    const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.style.display = user ? "inline-block" : "none";
+}
+
     if (!user) {
         if (skillsSection) skillsSection.style.display = "none";
         return;
@@ -109,11 +115,11 @@ firebase.auth().onAuthStateChanged(async (user) => {
     const role = doc.data().role;
 
     /* PAGE PROTECTION */
-    if (role === "client" && currentPage.includes("freelancer_profile"))
-        window.location.href = "client_profile.html";
-
-    if (role === "freelancer" && currentPage.includes("client_profile"))
-        window.location.href = "freelancer_profile.html";
+    if (role === "client" && currentPage.includes("freelancer_profile")) {
+    window.location.href = "client_profile.html";
+} else if (role === "freelancer" && currentPage.includes("client_profile")) {
+    window.location.href = "freelancer_profile.html";
+}
 
     /* SHOW SKILLS ONLY HERE */
     if (skillsSection && currentPage.includes("freelancer_profile")) {
