@@ -6,12 +6,10 @@
     <title>Freelancer Profile | EduLance</title>
 
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <header>
     <nav class="navbar">
         <div class="logo">EduLance</div>
@@ -19,87 +17,52 @@
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="projects.html">Projects</a></li>
-            <li><a href="freelancer_profile.html">Profile</a></li>
+            <li>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </li>
         </ul>
     </nav>
 </header>
 
-
-<section>
-    <h2>Freelancer Profile</h2>
-
-    <p>Add your skills (comma separated)</p>
-
-    <textarea
-        id="freelancerSkills"
-        placeholder="Example: HTML, CSS, JavaScript, UI Design"
-        rows="5"
-    ></textarea>
-
-    <br><br>
-
-    <button onclick="saveFreelancerProfile()">Save Profile</button>
-
-    <p id="saveMessage"></p>
-</section>
-
-<section>
-    <h2>Freelancer Profile</h2>
-
-    <br><br>
-
-    <button onclick="saveFreelancerProfile()">Save Profile</button>
-
-    <p id="saveMessage"></p>
-</section>
-
-
-<!-- ✅ ADD SKILLS SECTION HERE (INSIDE BODY) -->
 <section id="skillsSection" style="display:none; text-align:center; padding:40px;">
-
     <h2>Your Skills</h2>
 
-   <div class="skills-list">
+    <div class="skills-list">
 
-    <input type="checkbox" id="java" value="Java">
-    <label for="java">Java</label>
+        <input type="checkbox" id="java" value="Java">
+        <label for="java">Java</label>
 
-    <input type="checkbox" id="python" value="Python">
-    <label for="python">Python</label>
+        <input type="checkbox" id="python" value="Python">
+        <label for="python">Python</label>
 
-    <input type="checkbox" id="js" value="JavaScript">
-    <label for="js">JavaScript</label>
+        <input type="checkbox" id="js" value="JavaScript">
+        <label for="js">JavaScript</label>
 
-    <input type="checkbox" id="react" value="React">
-    <label for="react">React</label>
+        <input type="checkbox" id="react" value="React">
+        <label for="react">React</label>
 
-    <input type="checkbox" id="firebase" value="Firebase">
-    <label for="firebase">Firebase</label>
+        <input type="checkbox" id="firebase" value="Firebase">
+        <label for="firebase">Firebase</label>
 
-    <input type="checkbox" id="uiux" value="UI/UX">
-    <label for="uiux">UI/UX</label>
+        <input type="checkbox" id="uiux" value="UI/UX">
+        <label for="uiux">UI/UX</label>
 
-</div>
+    </div>
 
     <br>
     <button onclick="saveSkills()">Save Skills</button>
-
 </section>
-
 
 <footer class="footer">
     <p>© 2026 EduLance — IT Engineering Mini Project</p>
 </footer>
 
-<!-- Firebase SDK (compat) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<!-- Firebase init -->
 <script src="firebase-config.js"></script>
-
-<!-- YOUR CODE (ALWAYS LAST) -->
 <script src="app.js"></script>
 
 </body>

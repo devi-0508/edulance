@@ -5,145 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduLance | Home</title>
 
-    <!-- Main CSS (shared across all pages) -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- ================= NAVIGATION BAR ================= -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">EduLance</div>
+<header>
+    <nav class="navbar">
+        <div class="logo">EduLance</div>
 
-            <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="add_projects.html">Post Project</a></li>
+            <li>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </li>
+        </ul>
+    </nav>
+</header>
 
-    <li><a href="index.html">Home</a></li>
-    <li><a href="projects.html">Projects</a></li>
-    <li><a href="add_projects.html">Post Project</a></li>
-    <li>
-    <button onclick="logout()" class="logout-btn">
-        Logout
-    </button>
-</li>
+<section class="hero">
+    <div class="hero-content">
+        <h1>Connect Clients with Skilled Freelancers</h1>
+        <p>
+            EduLance helps clients find the right talent and freelancers
+            discover projects that match their skills.
+        </p>
 
-    <!-- Dynamic links inserted by JavaScript -->
-    
-</ul>
-        </nav>
-    </header>
-
-
-    <!-- ================= HERO SECTION ================= -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Connect Clients with Skilled Freelancers</h1>
-
-            <p>
-                EduLance helps clients find the right talent and freelancers
-                discover projects that match their skills using intelligent
-                skill-based matchmaking.
-            </p>
-
-            <div class="hero-buttons">
-                <a href="projects.html" class="primary-btn">Browse Projects</a>
-                <a href="register.html" class="secondary-btn">Join Now</a>
-            </div>
+        <div class="hero-buttons">
+            <a href="projects.html" class="primary-btn">Browse Projects</a>
+            <a href="register.html" class="secondary-btn">Join Now</a>
         </div>
-    </section>
+    </div>
+</section>
 
+<section class="features">
+    <h2>Platform Features</h2>
 
-
-    <!-- ================= FEATURES SECTION ================= -->
-    <section class="features">
-        <h2>Platform Features</h2>
-
-        <div class="feature-container">
-
-            <div class="feature-card">
-                <h3>Skill-Based Matching</h3>
-                <p>
-                    Our system connects freelancers and clients by comparing
-                    skills and project requirements for better collaboration.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <h3>Easy Project Posting</h3>
-                <p>
-                    Clients can quickly post projects and receive applications
-                    from qualified freelancers.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <h3>Professional Profiles</h3>
-                <p>
-                    Freelancers showcase their skills and experience while
-                    clients manage projects efficiently.
-                </p>
-            </div>
-
+    <div class="feature-container">
+        <div class="feature-card">
+            <h3>Skill-Based Matching</h3>
+            <p>Match freelancers and projects based on skills.</p>
         </div>
-    </section>
 
-
-    <!-- ================= HOW IT WORKS ================= -->
-    <section class="how-it-works">
-
-        <h2>How It Works</h2>
-
-        <div class="steps">
-
-            <div class="step">
-                <h3>1. Create an Account</h3>
-                <p>Register as a freelancer or a client to get started.</p>
-            </div>
-
-            <div class="step">
-                <h3>2. Post or Browse Projects</h3>
-                <p>Clients post jobs while freelancers explore opportunities.</p>
-            </div>
-
-            <div class="step">
-                <h3>3. Get Matched</h3>
-                <p>Our system suggests the best matches based on skills.</p>
-            </div>
-
+        <div class="feature-card">
+            <h3>Easy Project Posting</h3>
+            <p>Clients can quickly post projects.</p>
         </div>
-    </section>
 
+        <div class="feature-card">
+            <h3>Professional Profiles</h3>
+            <p>Showcase skills and manage projects.</p>
+        </div>
+    </div>
+</section>
 
-    <!-- ================= CALL TO ACTION ================= -->
-    <section class="cta">
-        <h2>Start Your Freelancing Journey Today</h2>
-        <p>Join thousands of users collaborating through EduLance.</p>
+<footer class="footer">
+    <p>© 2026 EduLance — IT Engineering Mini Project</p>
+</footer>
 
-        <a href="register.html" class="primary-btn">Create Account</a>
-    </section>
-
-
-    <!-- ================= FOOTER ================= -->
-    <footer class="footer">
-        <p>© 2026 EduLance — IT Engineering Mini Project</p>
-    </footer>
-
-
-    <!-- JavaScript -->
-    <!-- IMPORTANT: using type="module" so Firebase works later -->
-    <!-- Firebase SDK (compat versions) -->
-<!-- Firebase SDK (compat) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<!-- Firebase init -->
 <script src="firebase-config.js"></script>
-
-<!-- YOUR CODE (ALWAYS LAST) -->
 <script src="app.js"></script>
+
 </body>
 </html>

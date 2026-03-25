@@ -1,18 +1,9 @@
-/* =====================================================
-   EduLance - Main App Logic (EMAIL VERIFIED VERSION)
-===================================================== */
-
 console.log("Firebase Loaded:", typeof firebase !== "undefined");
 
-
-/* =====================================================
-   FIREBASE REGISTER
-===================================================== */
-
+/* REGISTER */
 const registerForm = document.getElementById("registerForm");
 
-if (registerForm && typeof firebase !== "undefined") {
-
+if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -22,58 +13,39 @@ if (registerForm && typeof firebase !== "undefined") {
         const role = document.getElementById("userRole").value;
 
         if (!role) {
-            alert("Please select account type");
+            alert("Select role");
             return;
         }
 
         try {
-
-            /* CREATE AUTH ACCOUNT */
             const cred = await firebase.auth()
                 .createUserWithEmailAndPassword(email, password);
 
             const user = cred.user;
 
-            /* SEND EMAIL VERIFICATION */
             await user.sendEmailVerification();
 
-            const db = firebase.firestore();
-
-            /* SAVE USER PROFILE */
-            await db.collection("users").doc(user.uid).set({
-                name: name,
-                email: email,
-                role: role,
-                emailVerified: false,
-                skills: [],
-                createdAt: new Date()
+            await firebase.firestore().collection("users").doc(user.uid).set({
+                name,
+                email,
+                role,
+                skills: []
             });
 
-            alert(
-                "✅ Registration successful!\n\n" +
-                "Verification email sent.\n" +
-                "Please verify your email before logging in."
-            );
-
+            alert("Verify your email before login.");
             firebase.auth().signOut();
             window.location.href = "login.html";
 
         } catch (err) {
-            console.error(err);
             alert(err.message);
         }
     });
 }
 
-
-/* =====================================================
-   FIREBASE LOGIN
-===================================================== */
-
+/* LOGIN */
 const loginForm = document.getElementById("loginForm");
 
-if (loginForm && typeof firebase !== "undefined") {
-
+if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -81,30 +53,24 @@ if (loginForm && typeof firebase !== "undefined") {
         const password = document.getElementById("loginPassword").value;
 
         try {
-
             const cred = await firebase.auth()
                 .signInWithEmailAndPassword(email, password);
 
             const user = cred.user;
 
-            /* 🚨 BLOCK UNVERIFIED USERS */
             if (!user.emailVerified) {
-
-                alert("Please verify your email before logging in.");
-                await firebase.auth().signOut();
+                alert("Verify email first");
+                firebase.auth().signOut();
                 return;
             }
 
-            const db = firebase.firestore();
-
-            const doc = await db
+            const doc = await firebase.firestore()
                 .collection("users")
                 .doc(user.uid)
                 .get();
 
             const role = doc.data().role;
 
-            alert("Login successful!");
             redirectUser(role);
 
         } catch (err) {
@@ -113,13 +79,8 @@ if (loginForm && typeof firebase !== "undefined") {
     });
 }
 
-
-/* =====================================================
-   ROLE REDIRECTION
-===================================================== */
-
+/* REDIRECT */
 function redirectUser(role) {
-
     if (role === "freelancer")
         window.location.href = "freelancer_profile.html";
 
@@ -127,116 +88,79 @@ function redirectUser(role) {
         window.location.href = "client_profile.html";
 }
 
+/* AUTH CHECK */
+firebase.auth().onAuthStateChanged(async (user) => {
 
-/* =====================================================
-   ROLE-BASED PAGE PROTECTION + SKILLS DISPLAY
-===================================================== */
+    const skillsSection = document.getElementById("skillsSection");
+    const currentPage = window.location.pathname;
 
-if (typeof firebase !== "undefined") {
+    if (!user) {
+        if (skillsSection) skillsSection.style.display = "none";
+        return;
+    }
 
-    firebase.auth().onAuthStateChanged(async (user) => {
+    const doc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
 
-        const skillsSection = document.getElementById("skillsSection");
+    if (!doc.exists) return;
 
-        /* USER NOT LOGGED IN */
-        if (!user) {
-            if (skillsSection) skillsSection.style.display = "none";
-            return;
-        }
+    const role = doc.data().role;
 
-        const db = firebase.firestore();
+    /* PAGE PROTECTION */
+    if (role === "client" && currentPage.includes("freelancer_profile"))
+        window.location.href = "client_profile.html";
 
-        try {
+    if (role === "freelancer" && currentPage.includes("client_profile"))
+        window.location.href = "freelancer_profile.html";
 
-            const doc = await db
-                .collection("users")
-                .doc(user.uid)
-                .get();
+    /* SHOW SKILLS ONLY HERE */
+    if (skillsSection && currentPage.includes("freelancer_profile")) {
+        skillsSection.style.display = "block";
+        loadSkills();
+    }
+});
 
-            if (!doc.exists) return;
-
-            const role = doc.data().role;
-            const currentPage = window.location.pathname;
-
-            /* ROLE PROTECTION */
-            if (
-                role === "client" &&
-                currentPage.includes("freelancer_profile.html")
-            ) {
-                window.location.href = "client_profile.html";
-            }
-
-            if (
-                role === "freelancer" &&
-                currentPage.includes("client_profile.html")
-            ) {
-                window.location.href = "freelancer_profile.html";
-            }
-
-            /* ✅ SHOW SKILLS SECTION */
-            if (skillsSection) {
-                skillsSection.style.display = "block";
-                loadSkills();
-            }
-
-        } catch (error) {
-            console.error("Role check error:", error);
-        }
+/* LOGOUT */
+function logout() {
+    firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
     });
 }
 
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-window.logout = function () {
-
-    firebase.auth().signOut()
-        .then(() => {
-            alert("Logged out successfully!");
-            window.location.href = "index.html";
-        });
-};
-
-/* =====================================================
-   SKILLS SYSTEM
-===================================================== */
-
+/* SAVE SKILLS */
 async function saveSkills() {
-
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const db = firebase.firestore();
-
     const selectedSkills = [];
 
-    document.querySelectorAll('#skillsSection input[type="checkbox"]:checked')
+    document.querySelectorAll('#skillsSection input:checked')
         .forEach(cb => selectedSkills.push(cb.value));
 
-    await db.collection("users").doc(user.uid).update({
-        skills: selectedSkills
-    });
+    await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .update({ skills: selectedSkills });
 
     alert("Skills saved!");
 }
 
-
+/* LOAD SKILLS */
 async function loadSkills() {
-
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const db = firebase.firestore();
-
-    const doc = await db.collection("users").doc(user.uid).get();
+    const doc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
 
     const savedSkills = doc.data().skills || [];
 
-    document.querySelectorAll('#skillsSection input[type="checkbox"]')
+    document.querySelectorAll('#skillsSection input')
         .forEach(cb => {
             cb.checked = savedSkills.includes(cb.value);
         });
 }
-

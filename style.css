@@ -337,3 +337,16 @@ button:hover {
     background: #4CAF50;
     color: white;
 }
+
+.logout-btn {
+    background: #ff4d4d;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+}
