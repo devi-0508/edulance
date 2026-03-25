@@ -108,7 +108,6 @@ firebase.auth().onAuthStateChanged(async (user) => {
 
     const loginLink = document.getElementById("loginLink");
 const registerLink = document.getElementById("registerLink");
-const logoutBtn = document.getElementById("logoutBtn");
 
 if (user) {
     if (loginLink) loginLink.style.display = "none";
