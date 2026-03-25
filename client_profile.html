@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Profile | EduLance</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <nav class="navbar">
+        <div class="logo">EduLance</div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="client_profile.html">Dashboard</a></li>
+        </ul>
+    </nav>
+</header>
+
+
+<section>
+    <h2>Client Dashboard</h2>
+
+    <input
+        type="text"
+        id="projectTitle"
+        placeholder="Project Title"
+    >
+
+    <textarea
+        id="projectSkills"
+        placeholder="Required Skills (comma separated)"
+        rows="4"
+    ></textarea>
+
+    <br><br>
+
+    <button onclick="postProject()">Post Project</button>
+
+    <p id="projectMessage"></p>
+</section>
+
+
+<footer class="footer">
+    <p>© 2026 EduLance — IT Engineering Mini Project</p>
+</footer>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- Firebase init -->
+<script src="firebase-config.js"></script>
+
+<!-- YOUR CODE (ALWAYS LAST) -->
+<script src="app.js"></script>
+
+</body>
+</html>

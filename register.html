@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLance | Register</title>
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<header>
+    <nav class="navbar">
+        <div class="logo">EduLance</div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="add_projects.html">Post Project</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html" class="register-btn">Register</a></li>
+        </ul>
+    </nav>
+</header>
+
+
+<!-- ========== REGISTER SECTION ========== -->
+<section class="register-section">
+
+    <h2>Create Your Account</h2>
+
+    <!-- Firebase Email Registration -->
+    <form id="registerForm">
+
+        <!-- Full Name -->
+        <input
+            type="text"
+            id="registerName"
+            placeholder="Full Name"
+            required
+        >
+
+        <!-- Email -->
+        <input
+            type="email"
+            id="registerEmail"
+            placeholder="Email Address"
+            required
+        >
+
+        <!-- Password -->
+        <input
+            type="password"
+            id="registerPassword"
+            placeholder="Password (min 6 characters)"
+            minlength="6"
+            required
+        >
+
+        <!-- Account Role -->
+        <select id="userRole" required>
+            <option value="">Select Account Type</option>
+            <option value="freelancer">Freelancer</option>
+            <option value="client">Client</option>
+        </select>
+
+        <!-- Register Button -->
+        <button type="submit">
+            Create Account
+        </button>
+
+        <p style="margin-top:15px; text-align:center;">
+            Already have an account?
+            <a href="login.html">Login here</a>
+        </p>
+
+        <p style="text-align:center; font-size:14px; opacity:0.7;">
+            A verification email will be sent after registration.
+        </p>
+
+    </form>
+</section>
+
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <p>© 2026 EduLance — IT Engineering Mini Project</p>
+</footer>
+
+
+<!-- ================= FIREBASE SDKs ================= -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="firebase-config.js"></script>
+
+<!-- App Logic (ALWAYS LAST) -->
+<script src="app.js"></script>
+
+</body>
+</html>
