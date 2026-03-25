@@ -16,20 +16,26 @@
 
 <!-- ========== NAVBAR ========== -->
 <header>
-    <nav class="navbar">
-        <div class="logo">EduLance</div>
+  <nav class="navbar">
+    <div class="logo">EduLance</div>
 
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li>
-                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
-                    Logout
-                </button>
-            </li>
-        </ul>
-    </nav>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Matched Projects</a></li>
+      <li><a href="freelancer_profile.html">My Skills</a></li>
+
+      <!-- Auth links -->
+      <li><a href="login.html" id="loginLink">Login</a></li>
+      <li><a href="register.html" id="registerLink" class="register-btn">Register</a></li>
+      <li>
+        <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+          Logout
+        </button>
+      </li>
+    </ul>
+  </nav>
 </header>
+
 
 <!-- ========== FREELANCER SKILLS SECTION ========== -->
 <section id="skillsSection" style="display:none; text-align:center; padding:40px;">
