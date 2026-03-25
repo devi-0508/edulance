@@ -106,6 +106,22 @@ firebase.auth().onAuthStateChanged(async (user) => {
         logoutBtn.style.display = user ? "inline-block" : "none";
     }
 
+    const loginLink = document.getElementById("loginLink");
+const registerLink = document.getElementById("registerLink");
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (user) {
+    if (loginLink) loginLink.style.display = "none";
+    if (registerLink) registerLink.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-block";
+} else {
+    if (loginLink) loginLink.style.display = "inline-block";
+    if (registerLink) registerLink.style.display = "inline-block";
+    if (logoutBtn) logoutBtn.style.display = "none";
+}
+
+
+
     if (!user) {
         if (skillsSection) skillsSection.style.display = "none";
         if (matchedProjectsSection) matchedProjectsSection.style.display = "none";
