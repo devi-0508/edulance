@@ -45,6 +45,7 @@ if (registerForm && typeof firebase !== "undefined") {
                 email: email,
                 role: role,
                 emailVerified: false,
+                skills: [],
                 createdAt: new Date()
             });
 

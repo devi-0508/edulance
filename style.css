@@ -309,3 +309,31 @@ button:hover {
         align-items: center;
     }
 }
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* hide default checkbox */
+.skills-list input {
+    display: none;
+}
+
+/* default chip */
+.skills-list label {
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: #eee;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+/* selected chip */
+.skills-list input:checked + label {
+    background: #4CAF50;
+    color: white;
+}
