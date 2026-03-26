@@ -349,3 +349,47 @@ async function loadMatchedProjects() {
             });
         });
 }
+
+/* ===============================
+   LOAD FREELANCERS (CLIENT VIEW)
+================================= */
+function loadFreelancers(skillFilter = "") {
+  const container = document.getElementById("freelancersContainer");
+  if (!container) return;
+
+  firebase.firestore().collection("users")
+    .where("role", "==", "freelancer")
+    .get()
+    .then(snapshot => {
+      container.innerHTML = "";
+      snapshot.forEach(doc => {
+        const freelancer = doc.data();
+
+        // Skill filter logic
+        if (skillFilter && !freelancer.skills.includes(skillFilter)) {
+          return;
+        }
+
+        container.innerHTML += `
+          <div class="freelancer-card">
+            <h3>${freelancer.name}</h3>
+            <p><strong>Email:</strong> ${freelancer.email}</p>
+            <p><strong>Skills:</strong> ${freelancer.skills.join(", ") || "No skills listed"}</p>
+            <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
+          </div>
+        `;
+      });
+    });
+}
+
+// Filter button handler
+function filterFreelancers() {
+  const skill = document.getElementById("skillFilter").value.trim();
+  loadFreelancers(skill);
+}
+
+// Placeholder for offering project
+function offerProject(freelancerId) {
+  alert("Feature coming soon: Offer project to freelancer " + freelancerId);
+}
+
