@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Freelancers - EduLance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">EduLance</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="add_projects.html">Post Project</a></li>
+        <li><a href="login.html" id="loginLink">Login</a></li>
+        <li><a href="register.html" id="registerLink" class="register-btn">Register</a></li>
+        <li>
+          <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;">
+            Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="filter-section">
+      <h2>Filter Freelancers by Skills</h2>
+      <input type="text" id="skillFilter" placeholder="Enter skill (e.g. React)">
+      <button onclick="filterFreelancers()">Filter</button>
+    </section>
+
+    <section id="freelancersContainer" class="freelancers-container">
+      <!-- Freelancer cards will be injected here -->
+    </section>
+  </main>
+
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Load all freelancers on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFreelancers();
+    });
+  </script>
+</body>
+</html>
