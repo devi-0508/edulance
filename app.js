@@ -336,6 +336,7 @@ async function loadMatchedProjects() {
             projectsContainer.innerHTML = "";
             snapshot.forEach(doc => {
                 const project = doc.data();
+                console.log("Freelancer:", freelancer.name, "Skills:", freelancer.skills);
                 if (skills.some(skill => project.skills.includes(skill))) {
                     projectsContainer.innerHTML += `
                         <div class="project-card">
@@ -354,6 +355,7 @@ async function loadMatchedProjects() {
    LOAD FREELANCERS (CLIENT VIEW)
 ================================= */
 function loadFreelancers(skillFilter = "") {
+    console.log("Loading freelancers with filter:", skillFilter);
   const container = document.getElementById("freelancersContainer");
   if (!container) return;
 
@@ -385,6 +387,7 @@ function loadFreelancers(skillFilter = "") {
 // Filter button handler
 function filterFreelancers() {
   const skill = document.getElementById("skillFilter").value.trim();
+  console.log("Filter button clicked, skill:", skill);
   loadFreelancers(skill);
 }
 
