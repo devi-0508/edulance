@@ -35,23 +35,17 @@
       <!-- Freelancer cards will be injected here -->
     </section>
   </main>
-    <!-- Firebase SDKs (compat versions for global firebase object) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDKs (compat versions for global firebase object) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-    <!-- Your Firebase config (initializes Firebase) -->
-    <script src="firebase-config.js"></script>
+<!-- Your Firebase config -->
+<script src="firebase-config.js"></script>
 
-    <!-- Your app logic (ALWAYS last) -->
-    <script src="app.js"></script>
+<!-- Your app logic -->
+<script src="app.js"></script>
 
-    <script>
-      // Load all freelancers on page load
-      document.addEventListener("DOMContentLoaded", () => {
-        loadFreelancers();
-      });
-    </script>
   </body>
 </html>
 
