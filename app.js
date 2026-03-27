@@ -355,7 +355,7 @@ async function loadMatchedProjects() {
    LOAD FREELANCERS (CLIENT VIEW)
 ================================= */
 function loadFreelancers(skillFilter = "") {
-    console.log("Loading freelancers with filter:", skillFilter);
+  console.log("Loading freelancers with filter:", skillFilter);
   const container = document.getElementById("freelancersContainer");
   if (!container) return;
 
@@ -367,22 +367,29 @@ function loadFreelancers(skillFilter = "") {
       snapshot.forEach(doc => {
         const freelancer = doc.data();
 
-        // Skill filter logic
-        if (skillFilter && !freelancer.skills.includes(skillFilter)) {
+        // Ensure skills is always an array
+        const skills = Array.isArray(freelancer.skills) ? freelancer.skills : [];
+
+        // Skill filter logic (case-insensitive)
+        if (skillFilter && !skills.some(s => s.toLowerCase() === skillFilter.toLowerCase())) {
           return;
         }
 
         container.innerHTML += `
           <div class="freelancer-card">
-            <h3>${freelancer.name}</h3>
-            <p><strong>Email:</strong> ${freelancer.email}</p>
-            <p><strong>Skills:</strong> ${freelancer.skills.join(", ") || "No skills listed"}</p>
+            <h3>${freelancer.name || "Unnamed Freelancer"}</h3>
+            <p><strong>Email:</strong> ${freelancer.email || "N/A"}</p>
+            <p><strong>Skills:</strong> ${skills.length ? skills.join(", ") : "No skills listed"}</p>
             <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
           </div>
         `;
       });
+    })
+    .catch(error => {
+      console.error("Error loading freelancers:", error);
     });
 }
+
 
 // Filter button handler
 function filterFreelancers() {
