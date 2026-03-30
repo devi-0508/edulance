@@ -12,6 +12,7 @@ if (registerForm) {
     const password = document.getElementById("registerPassword").value;
     const role = document.getElementById("userRole").value;
     const resumeLink = document.getElementById("resumeLink")?.value.trim();
+    const verificationFolderLink = document.getElementById("verificationFolderLink")?.value.trim();
 
     if (!role) {
       alert("Select role");
@@ -136,9 +137,25 @@ if (user) {
         .doc(user.uid)
         .get();
 
-    if (!doc.exists) return;
+    if (!doc.exists) {
+  alert("User record not found.");
+  firebase.auth().signOut();
+  return;
+}
 
-    const data = doc.data();
+    
+
+const data = doc.data();
+
+if (data.role === "freelancer" && data.status !== "verified") {
+  alert("Your account is pending admin approval. Please wait until verification.");
+  firebase.auth().signOut();
+  return;
+}
+
+redirectUser(data.role);
+
+
    const profileResume = document.getElementById("profileResume");
 if (profileResume) {
   if (data.resumeLink) {
@@ -240,11 +257,13 @@ document.getElementById("saveProfileBtn")?.addEventListener("click", async () =>
 
   const resumeLink = document.getElementById("resumeLink")?.value.trim();
   const idLink = document.getElementById("idLink")?.value.trim();
+  const verificationFolderLink = document.getElementById("verificationFolderLink")?.value.trim();
 
   try {
     await firebase.firestore().collection("users").doc(user.uid).update({
       resumeLink: resumeLink || null,
-      idLink: idLink || null
+      idLink: idLink || null,
+      verificationFolderLink: verificationFolderLink || null
     });
     alert("Profile updated successfully!");
   } catch (error) {
@@ -252,6 +271,7 @@ document.getElementById("saveProfileBtn")?.addEventListener("click", async () =>
     alert("Failed to update profile. Please try again.");
   }
 });
+
 
 
 
@@ -415,7 +435,7 @@ async function loadMatchedProjects() {
             projectsContainer.innerHTML = "";
             snapshot.forEach(doc => {
                 const project = doc.data();
-                console.log("Freelancer:", freelancer.name, "Skills:", freelancer.skills);
+                console.log("Skills:", skills);
                 if (skills.some(skill => project.skills.includes(skill))) {
                     projectsContainer.innerHTML += `
                         <div class="project-card">
