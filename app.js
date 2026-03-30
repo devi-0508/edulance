@@ -33,10 +33,11 @@ if (registerForm) {
   role: role,
   resumeLink,
   verificationFolderLink,
-  status: "pending",   // <-- important
+  status: "pending",
   createdAt: firebase.firestore.FieldValue.serverTimestamp()
 });
 
+console.log("Firestore user created:", user.uid);
 
       alert("Verify your email before login.");
       firebase.auth().signOut();
@@ -145,14 +146,13 @@ if (user) {
         if (matchedProjectsSection) matchedProjectsSection.style.display = "none";
         return;
     }
+const doc = await firebase.firestore()
+    .collection("users")
+    .doc(user.uid)
+    .get();
 
-    const doc = await firebase.firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get();
-
-    if (!doc.exists) {
-  console.warn("User doc missing, creating one...");
+if (!doc.exists) {
+  console.warn("User doc missing. Creating...");
 
   await firebase.firestore().collection("users").doc(user.uid).set({
     name: user.displayName || "User",
@@ -163,7 +163,6 @@ if (user) {
   });
 
   return;
-
 }
 
     
