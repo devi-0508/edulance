@@ -82,8 +82,22 @@ if (loginForm) {
             redirectUser(role);
 
         } catch (err) {
-            alert(err.message);
-        }
+  console.error("Registration failed:", err);
+
+  // Cleanup if Firestore fails after Auth succeeded
+  const currentUser = firebase.auth().currentUser;
+  if (currentUser) {
+    try {
+      await currentUser.delete();
+      console.log("Auth user deleted due to Firestore failure");
+    } catch (deleteErr) {
+      console.error("Failed to delete Auth user:", deleteErr);
+    }
+  }
+
+  alert(err.message);
+}
+
     });
 }
 
