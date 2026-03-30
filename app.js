@@ -30,7 +30,7 @@ if (registerForm) {
       await firebase.firestore().collection("users").doc(user.uid).set({
   name,
   email,
-  role: "freelancer",
+  role: role,
   resumeLink,
   verificationFolderLink,
   status: "pending",   // <-- important
@@ -152,9 +152,18 @@ if (user) {
         .get();
 
     if (!doc.exists) {
-  alert("User record not found.");
-  firebase.auth().signOut();
+  console.warn("User doc missing, creating one...");
+
+  await firebase.firestore().collection("users").doc(user.uid).set({
+    name: user.displayName || "User",
+    email: user.email,
+    role: "freelancer",
+    status: "pending",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
   return;
+
 }
 
     
