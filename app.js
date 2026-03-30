@@ -11,6 +11,7 @@ if (registerForm) {
         const email = document.getElementById("registerEmail").value;
         const password = document.getElementById("registerPassword").value;
         const role = document.getElementById("userRole").value;
+        const resumeFile = document.getElementById("resumeUpload").files[0];
 
         if (!role) {
             alert("Select role");
@@ -23,15 +24,30 @@ if (registerForm) {
 
             const user = cred.user;
 
+            let resumeURL = "";
+if (resumeFile) {
+    const storageRef = firebase.storage().ref();
+    const fileRef = storageRef.child(`resumes/${user.uid}.pdf`);
+    await fileRef.put(resumeFile);
+    resumeURL = await fileRef.getDownloadURL();
+}
+
+
             await user.sendEmailVerification();
 
             await firebase.firestore().collection("users").doc(user.uid).set({
-                name,
-                email,
-                role,
-                skills: [],
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+    name,
+    email,
+    role,
+    skills: [],
+    resume: resumeURL, // empty if no file uploaded
+    github: document.getElementById("github")?.value || "",
+    projects: document.getElementById("projects")?.value
+        ? document.getElementById("projects").value.split(",").map(p => p.trim()).filter(p => p)
+        : [],
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+
 
             alert("Verify your email before login.");
             firebase.auth().signOut();
