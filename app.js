@@ -4,60 +4,51 @@
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const name = document.getElementById("registerName").value;
-        const email = document.getElementById("registerEmail").value;
-        const password = document.getElementById("registerPassword").value;
-        const role = document.getElementById("userRole").value;
-        const resumeFile = document.getElementById("resumeUpload").files[0];
+    const name = document.getElementById("registerName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+    const role = document.getElementById("userRole").value;
+    const resumeLink = document.getElementById("resumeLink")?.value.trim();
 
-        if (!role) {
-            alert("Select role");
-            return;
-        }
+    if (!role) {
+      alert("Select role");
+      return;
+    }
 
-        try {
-            const cred = await firebase.auth()
-                .createUserWithEmailAndPassword(email, password);
+    try {
+      const cred = await firebase.auth()
+        .createUserWithEmailAndPassword(email, password);
 
-            const user = cred.user;
+      const user = cred.user;
 
-            let resumeURL = "";
-if (resumeFile) {
-    const storageRef = firebase.storage().ref();
-    const fileRef = storageRef.child(`resumes/${user.uid}.pdf`);
-    await fileRef.put(resumeFile);
-    resumeURL = await fileRef.getDownloadURL();
+      await user.sendEmailVerification();
+
+      await firebase.firestore().collection("users").doc(user.uid).set({
+        name,
+        email,
+        role,
+        skills: [],
+        resumeLink: resumeLink || "", // store pasted link
+        github: document.getElementById("github")?.value || "",
+        projects: document.getElementById("projects")?.value
+          ? document.getElementById("projects").value.split(",").map(p => p.trim()).filter(p => p)
+          : [],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      alert("Verify your email before login.");
+      firebase.auth().signOut();
+      window.location.href = "login.html";
+
+    } catch (err) {
+      alert(err.message);
+    }
+  });
 }
 
-
-            await user.sendEmailVerification();
-
-            await firebase.firestore().collection("users").doc(user.uid).set({
-    name,
-    email,
-    role,
-    skills: [],
-    resume: resumeURL, // empty if no file uploaded
-    github: document.getElementById("github")?.value || "",
-    projects: document.getElementById("projects")?.value
-        ? document.getElementById("projects").value.split(",").map(p => p.trim()).filter(p => p)
-        : [],
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-});
-
-
-            alert("Verify your email before login.");
-            firebase.auth().signOut();
-            window.location.href = "login.html";
-
-        } catch (err) {
-            alert(err.message);
-        }
-    });
-}
 
 /* ===============================
    LOGIN
