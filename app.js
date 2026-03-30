@@ -201,6 +201,7 @@ function logout() {
 }
 
 /* ===============================
+/* ===============================
    SAVE SKILLS
 ================================= */
 async function saveSkills() {
@@ -218,7 +219,31 @@ async function saveSkills() {
 
     alert("Skills saved!");
     loadMatchedProjects();
-}
+} // ✅ close the function here
+
+/* ===============================
+   SAVE PROFILE LINKS
+================================= */
+document.getElementById("saveProfileBtn")?.addEventListener("click", async () => {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+
+  const resumeLink = document.getElementById("resumeLink")?.value.trim();
+  const idLink = document.getElementById("idLink")?.value.trim();
+
+  try {
+    await firebase.firestore().collection("users").doc(user.uid).update({
+      resumeLink: resumeLink || null,
+      idLink: idLink || null
+    });
+    alert("Profile updated successfully!");
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    alert("Failed to update profile. Please try again.");
+  }
+});
+
+
 
 /* ===============================
    LOAD SKILLS
@@ -302,6 +327,23 @@ function loadClientProjects(clientId) {
             });
         });
 }
+
+/* ===============================
+   LOAD FREELANCER RESUME (CLIENT VIEW)
+================================= */
+async function loadFreelancerResume(freelancerId) {
+  const doc = await firebase.firestore().collection("users").doc(freelancerId).get();
+  if (doc.exists) {
+    const data = doc.data();
+    const resumeSection = document.getElementById("resumeSection");
+    if (data.resumeLink) {
+      resumeSection.innerHTML = `Resume: <a href="${data.resumeLink}" target="_blank">View Resume</a>`;
+    } else {
+      resumeSection.textContent = "Resume: Not provided";
+    }
+  }
+}
+
 
 /* ===============================
    LOAD ALL PROJECTS (PROJECTS PAGE)
@@ -407,6 +449,11 @@ function loadFreelancers(skillFilter = "") {
             <h3>${freelancer.name || "Unnamed Freelancer"}</h3>
             <p><strong>Email:</strong> ${freelancer.email || "N/A"}</p>
             <p><strong>Skills:</strong> ${skills.length ? skills.join(", ") : "No skills listed"}</p>
+            <p><strong>Resume:</strong> ${
+              freelancer.resumeLink 
+                ? `<a href="${freelancer.resumeLink}" target="_blank">View Resume</a>` 
+                : "Not provided"
+            }</p>
             <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
           </div>
         `;
@@ -416,6 +463,7 @@ function loadFreelancers(skillFilter = "") {
       console.error("Error loading freelancers:", error);
     });
 }
+
 
 
 // Filter button handler
