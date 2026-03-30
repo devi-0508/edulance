@@ -153,12 +153,15 @@ if (user) {
     const data = doc.data();
     const role = data.role;
 
-
-// ✅ Show Admin link if user is admin
 const adminLink = document.getElementById("adminLink");
+console.log("Admin link element:", adminLink);
+
+// Show Admin link if user is admin
 if (adminLink && data.isAdmin) {
-  adminLink.style.display = "inline-block";
+    adminLink.style.display = "inline-block";
+    console.log("Admin link shown for:", data.email);
 }
+
 
     // Page protection
     if (role === "client" && currentPage.includes("freelancer_profile")) {
