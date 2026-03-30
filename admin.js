@@ -8,8 +8,8 @@ firebase.auth().onAuthStateChanged(async (user) => {
   const doc = await firebase.firestore().collection("users").doc(user.uid).get();
   const data = doc.data();
 
-  if (!data.isAdmin) {
-    alert("Access denied");
+  if (!doc.exists || !data.isAdmin) {
+    alert("Access denied. Admins only.");
     window.location.href = "index.html";
     return;
   }
@@ -18,7 +18,7 @@ firebase.auth().onAuthStateChanged(async (user) => {
   loadPendingUsers();
 });
 
-// Load pending users
+// Load pending users (status = "pending")
 function loadPendingUsers() {
   const container = document.getElementById("pendingUsersContainer");
   if (!container) return;
@@ -35,8 +35,10 @@ function loadPendingUsers() {
             <h3>${user.name || "Unnamed User"}</h3>
             <p><strong>Email:</strong> ${user.email}</p>
             <p><strong>Role:</strong> ${user.role}</p>
-            <p><strong>Resume:</strong> 
-              ${user.resume ? `<a href="${user.resume}" target="_blank">View Resume</a>` : "No resume link"}
+            <p><strong>Verification Folder:</strong> 
+              ${user.verificationFolderLink 
+                ? `<a href="${user.verificationFolderLink}" target="_blank">Open Folder</a>` 
+                : "Not provided"}
             </p>
             <button onclick="verifyUser('${doc.id}', true)">Approve</button>
             <button onclick="verifyUser('${doc.id}', false)">Reject</button>
@@ -53,5 +55,8 @@ function verifyUser(userId, approve) {
   }).then(() => {
     alert(`User ${approve ? "approved" : "rejected"} successfully`);
     loadPendingUsers(); // refresh list
+  }).catch(err => {
+    console.error("Error updating verification:", err);
+    alert("Failed to update verification status.");
   });
 }
