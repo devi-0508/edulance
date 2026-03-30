@@ -27,17 +27,15 @@ if (registerForm) {
       await user.sendEmailVerification();
 
       await firebase.firestore().collection("users").doc(user.uid).set({
-        name,
-        email,
-        role,
-        skills: [],
-        resumeLink: resumeLink || "", // store pasted link
-        github: document.getElementById("github")?.value || "",
-        projects: document.getElementById("projects")?.value
-          ? document.getElementById("projects").value.split(",").map(p => p.trim()).filter(p => p)
-          : [],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+  name,
+  email,
+  role: "freelancer",
+  resumeLink,
+  verificationFolderLink,
+  status: "pending",   // <-- important
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+
 
       alert("Verify your email before login.");
       firebase.auth().signOut();
@@ -162,7 +160,6 @@ if (profileId) {
     profileId.textContent = "Not provided";
   }
 }
-
 
     const role = data.role;
 
