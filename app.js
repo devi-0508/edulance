@@ -150,7 +150,15 @@ if (user) {
 
     if (!doc.exists) return;
 
-    const role = doc.data().role;
+    const data = doc.data();
+    const role = data.role;
+
+
+// ✅ Show Admin link if user is admin
+const adminLink = document.getElementById("adminLink");
+if (adminLink && data.isAdmin) {
+  adminLink.style.display = "inline-block";
+}
 
     // Page protection
     if (role === "client" && currentPage.includes("freelancer_profile")) {
