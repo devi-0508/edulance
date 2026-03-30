@@ -141,6 +141,29 @@ if (user) {
     if (!doc.exists) return;
 
     const data = doc.data();
+   const profileResume = document.getElementById("profileResume");
+if (profileResume) {
+  if (data.resumeLink) {
+    profileResume.href = data.resumeLink;
+    profileResume.textContent = "View Resume";
+  } else {
+    profileResume.removeAttribute("href");
+    profileResume.textContent = "Not provided";
+  }
+}
+
+const profileId = document.getElementById("profileId");
+if (profileId) {
+  if (data.idLink) {
+    profileId.href = data.idLink;
+    profileId.textContent = "View ID";
+  } else {
+    profileId.removeAttribute("href");
+    profileId.textContent = "Not provided";
+  }
+}
+
+
     const role = data.role;
 
 const adminLink = document.getElementById("adminLink");
