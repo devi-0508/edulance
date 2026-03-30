@@ -445,18 +445,19 @@ function loadFreelancers(skillFilter = "") {
         }
 
         container.innerHTML += `
-          <div class="freelancer-card">
-            <h3>${freelancer.name || "Unnamed Freelancer"}</h3>
-            <p><strong>Email:</strong> ${freelancer.email || "N/A"}</p>
-            <p><strong>Skills:</strong> ${skills.length ? skills.join(", ") : "No skills listed"}</p>
-            <p><strong>Resume:</strong> ${
-              freelancer.resumeLink 
-                ? `<a href="${freelancer.resumeLink}" target="_blank">View Resume</a>` 
-                : "Not provided"
-            }</p>
-            <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
-          </div>
-        `;
+  <div class="freelancer-card">
+    <h3>${freelancer.name || "Unnamed Freelancer"}</h3>
+    <p><strong>Email:</strong> ${freelancer.email || "N/A"}</p>
+    <p><strong>Skills:</strong> ${skills.length ? skills.join(", ") : "No skills listed"}</p>
+    <p><strong>Resume:</strong> ${
+      freelancer.resumeLink 
+        ? `<a href="${freelancer.resumeLink}" target="_blank">View Resume</a>` 
+        : "Not provided"
+    }</p>
+    <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
+  </div>
+`;
+
       });
     })
     .catch(error => {
