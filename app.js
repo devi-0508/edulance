@@ -366,14 +366,13 @@ async function loadMatchedProjects() {
 
         const projectSkills = project.skills || [];
 
-        // ✅ safe matching
         if (skills.length === 0 || skills.some(skill => projectSkills.includes(skill))) {
 
             let clientEmail = "Not available";
-            console.log("Project:", project);
-console.log("Client ID:", project.clientId);
 
-            // ✅ fetch client email safely
+            console.log("Project:", project);
+            console.log("Client ID:", project.clientId);
+
             if (project.clientId) {
                 try {
                     const clientDoc = await firebase.firestore()
@@ -381,9 +380,11 @@ console.log("Client ID:", project.clientId);
                         .doc(project.clientId)
                         .get();
 
+                    console.log("Client exists:", clientDoc.exists);
+                    console.log("Client data:", clientDoc.data());
+
                     if (clientDoc.exists) {
                         const clientData = clientDoc.data();
-                        console.log("Client Data:", clientData);
 
                         if (clientData.email) {
                             clientEmail = clientData.email;
@@ -393,9 +394,7 @@ console.log("Client ID:", project.clientId);
                     console.error("Error fetching client:", error);
                 }
             }
-            console.log("Client exists:", clientDoc.exists);
-console.log("Client data:", clientDoc.data());
-            // ✅ safe UI rendering
+
             container.innerHTML += `
                 <div class="project-card">
                     <h3>${project.title || "No Title"}</h3>
