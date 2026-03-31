@@ -25,19 +25,20 @@ if (registerForm) {
 
       const user = cred.user;
 
-      // ✅ Save user in Firestore
+      await user.sendEmailVerification();
+
       await firebase.firestore().collection("users").doc(user.uid).set({
-        name,
-        email,
-        role: role,
-        resumeLink,
-        verificationFolderLink,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+  name,
+  email,
+  role: "freelancer",
+  resumeLink,
+  verificationFolderLink,
+  status: "pending",   // <-- important
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
 
-      console.log("User created:", user.uid);
 
-      alert("Registration successful! Please login.");
+      alert("Verify your email before login.");
       firebase.auth().signOut();
       window.location.href = "login.html";
 
@@ -53,132 +54,439 @@ if (registerForm) {
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
 
-    try {
-      const cred = await firebase.auth()
-        .signInWithEmailAndPassword(email, password);
+        try {
+            const cred = await firebase.auth()
+                .signInWithEmailAndPassword(email, password);
 
-      const user = cred.user;
+            const user = cred.user;
 
-      const doc = await firebase.firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get();
+            if (!user.emailVerified) {
+                alert("Verify email first");
+                firebase.auth().signOut();
+                return;
+            }
 
-      // ✅ If user doc missing → create it
-      if (!doc.exists) {
-        console.warn("User doc missing. Creating...");
+            const doc = await firebase.firestore()
+                .collection("users")
+                .doc(user.uid)
+                .get();
 
-        await firebase.firestore().collection("users").doc(user.uid).set({
-          name: user.displayName || "User",
-          email: user.email,
-          role: "freelancer",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+            const role = doc.data().role;
 
-        alert("Account initialized. Please login again.");
-        await firebase.auth().signOut();
-        return;
-      }
+            redirectUser(role);
 
-      const role = doc.data().role;
-      redirectUser(role);
-
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
-  });
+        } catch (err) {
+            alert(err.message);
+        }
+    });
 }
 
 /* ===============================
    REDIRECT BASED ON ROLE
 ================================= */
 function redirectUser(role) {
-  if (role === "freelancer")
-    window.location.href = "freelancer_profile.html";
+    if (role === "freelancer")
+        window.location.href = "freelancer_profile.html";
 
-  if (role === "client")
-    window.location.href = "client_profile.html";
+    if (role === "client")
+        window.location.href = "client_profile.html";
 }
 
 /* ===============================
    AUTH CHECK
 ================================= */
 firebase.auth().onAuthStateChanged(async (user) => {
-  const skillsSection = document.getElementById("skillsSection");
-  const matchedProjectsSection = document.getElementById("matchedProjectsSection");
-  const currentPage = window.location.pathname;
-  const logoutBtn = document.getElementById("logoutBtn");
+    const skillsSection = document.getElementById("skillsSection");
+    const matchedProjectsSection = document.getElementById("matchedProjectsSection");
+    const currentPage = window.location.pathname;
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  if (logoutBtn) {
-    logoutBtn.style.display = user ? "inline-block" : "none";
-  }
-
-  if (!user) {
-    if (skillsSection) skillsSection.style.display = "none";
-    if (matchedProjectsSection) matchedProjectsSection.style.display = "none";
-    return;
-  }
-
-  const doc = await firebase.firestore()
-    .collection("users")
-    .doc(user.uid)
-    .get();
-
-  // ✅ Auto-create if missing
-  if (!doc.exists) {
-    console.warn("User doc missing (auth check). Creating...");
-
-    await firebase.firestore().collection("users").doc(user.uid).set({
-      name: user.displayName || "User",
-      email: user.email,
-      role: "freelancer",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    return;
-  }
-
-  const data = doc.data();
-
-  // ✅ No admin verification anymore
-  redirectUser(data.role);
-
-  // Profile links
-  const profileResume = document.getElementById("profileResume");
-  if (profileResume) {
-    if (data.resumeLink) {
-      profileResume.href = data.resumeLink;
-      profileResume.textContent = "View Resume";
-    } else {
-      profileResume.removeAttribute("href");
-      profileResume.textContent = "Not provided";
+    if (logoutBtn) {
+        logoutBtn.style.display = user ? "inline-block" : "none";
     }
-  }
 
-  const profileId = document.getElementById("profileId");
-  if (profileId) {
-    if (data.idLink) {
-      profileId.href = data.idLink;
-      profileId.textContent = "View ID";
-    } else {
-      profileId.removeAttribute("href");
-      profileId.textContent = "Not provided";
+    const loginLink = document.getElementById("loginLink");
+const registerLink = document.getElementById("registerLink");
+
+if (user) {
+    if (loginLink) loginLink.style.display = "none";
+    if (registerLink) registerLink.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-block";
+} else {
+    if (loginLink) loginLink.style.display = "inline-block";
+    if (registerLink) registerLink.style.display = "inline-block";
+    if (logoutBtn) logoutBtn.style.display = "none";
+}
+
+
+
+    if (!user) {
+        if (skillsSection) skillsSection.style.display = "none";
+        if (matchedProjectsSection) matchedProjectsSection.style.display = "none";
+        return;
     }
+
+    const doc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+
+    if (!doc.exists) return;
+
+    const data = doc.data();
+   const profileResume = document.getElementById("profileResume");
+if (profileResume) {
+  if (data.resumeLink) {
+    profileResume.href = data.resumeLink;
+    profileResume.textContent = "View Resume";
+  } else {
+    profileResume.removeAttribute("href");
+    profileResume.textContent = "Not provided";
   }
+}
+
+const profileId = document.getElementById("profileId");
+if (profileId) {
+  if (data.idLink) {
+    profileId.href = data.idLink;
+    profileId.textContent = "View ID";
+  } else {
+    profileId.removeAttribute("href");
+    profileId.textContent = "Not provided";
+  }
+}
+
+    const role = data.role;
+
+const adminLink = document.getElementById("adminLink");
+console.log("Admin link element:", adminLink);
+
+// Show Admin link if user is admin
+if (adminLink && data.isAdmin) {
+    adminLink.style.display = "inline-block";
+    console.log("Admin link shown for:", data.email);
+}
+
+
+    // Page protection
+    if (role === "client" && currentPage.includes("freelancer_profile")) {
+        window.location.href = "client_profile.html";
+    } else if (role === "freelancer" && currentPage.includes("client_profile")) {
+        window.location.href = "freelancer_profile.html";
+    }
+
+    // Show freelancer skills section
+    if (skillsSection && currentPage.includes("freelancer_profile")) {
+        skillsSection.style.display = "block";
+        loadSkills();
+        if (matchedProjectsSection) {
+            matchedProjectsSection.style.display = "block";
+            loadMatchedProjects();
+        }
+    }
+
+    // Show client’s posted projects
+    if (currentPage.includes("client_profile")) {
+        loadClientProjects(user.uid);
+    }
+
+    // Show all projects (projects.html)
+    if (currentPage.includes("projects.html")) {
+        loadAllProjects(role, user.uid);
+    }
 });
 
 /* ===============================
    LOGOUT
 ================================= */
 function logout() {
-  firebase.auth().signOut().then(() => {
-    window.location.href = "index.html";
-  });
+    firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+    });
 }
+
+/* ===============================
+/* ===============================
+   SAVE SKILLS
+================================= */
+async function saveSkills() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    const selectedSkills = [];
+    document.querySelectorAll('#skillsSection input:checked')
+        .forEach(cb => selectedSkills.push(cb.value));
+
+    await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .update({ skills: selectedSkills });
+
+    alert("Skills saved!");
+    loadMatchedProjects();
+} // ✅ close the function here
+
+/* ===============================
+   SAVE PROFILE LINKS
+================================= */
+document.getElementById("saveProfileBtn")?.addEventListener("click", async () => {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+
+  const resumeLink = document.getElementById("resumeLink")?.value.trim();
+  const idLink = document.getElementById("idLink")?.value.trim();
+
+  try {
+    await firebase.firestore().collection("users").doc(user.uid).update({
+      resumeLink: resumeLink || null,
+      idLink: idLink || null
+    });
+    alert("Profile updated successfully!");
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    alert("Failed to update profile. Please try again.");
+  }
+});
+
+
+
+/* ===============================
+   LOAD SKILLS
+================================= */
+async function loadSkills() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    const doc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+
+    const savedSkills = doc.data().skills || [];
+
+    document.querySelectorAll('#skillsSection input')
+        .forEach(cb => {
+            cb.checked = savedSkills.includes(cb.value);
+        });
+}
+
+/* ===============================
+   POST PROJECT (CLIENT)
+================================= */
+const addProjectForm = document.getElementById("addProjectForm");
+if (addProjectForm) {
+    addProjectForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById("projectTitle").value;
+        const description = document.getElementById("projectDescription").value;
+        const skills = document.getElementById("projectSkills").value.split(",").map(s => s.trim());
+        const budget = parseInt(document.getElementById("projectBudget").value);
+
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You must be logged in to post a project.");
+            return;
+        }
+
+        try {
+            await firebase.firestore().collection("projects").add({
+                title,
+                description,
+                skills,
+                budget,
+                clientId: user.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Project posted successfully!");
+            window.location.href = "projects.html";
+        } catch (error) {
+            console.error("Error adding project: ", error);
+            alert("Failed to post project. Try again.");
+        }
+    });
+}
+
+/* ===============================
+   LOAD CLIENT PROJECTS
+================================= */
+function loadClientProjects(clientId) {
+    const container = document.getElementById("clientProjectsContainer");
+    if (!container) return;
+
+    firebase.firestore().collection("projects")
+        .where("clientId", "==", clientId)
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+            container.innerHTML = "";
+            snapshot.forEach(doc => {
+                const project = doc.data();
+                container.innerHTML += `
+                    <div class="project-card">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
+                        <p><strong>Budget:</strong> ₹${project.budget}</p>
+                    </div>
+                `;
+            });
+        });
+}
+
+/* ===============================
+   LOAD FREELANCER RESUME (CLIENT VIEW)
+================================= */
+async function loadFreelancerResume(freelancerId) {
+  const doc = await firebase.firestore().collection("users").doc(freelancerId).get();
+  if (doc.exists) {
+    const data = doc.data();
+    const resumeSection = document.getElementById("resumeSection");
+    if (data.resumeLink) {
+      resumeSection.innerHTML = `Resume: <a href="${data.resumeLink}" target="_blank">View Resume</a>`;
+    } else {
+      resumeSection.textContent = "Resume: Not provided";
+    }
+  }
+}
+
+
+/* ===============================
+   LOAD ALL PROJECTS (PROJECTS PAGE)
+================================= */
+function loadAllProjects(role, userId) {
+    const container = document.getElementById("projectsContainer");
+    if (!container) return;
+
+    firebase.firestore().collection("projects")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(async snapshot => {
+            container.innerHTML = "";
+
+            let userSkills = [];
+            if (role === "freelancer") {
+                const doc = await firebase.firestore().collection("users").doc(userId).get();
+                userSkills = doc.data().skills || [];
+            }
+
+            snapshot.forEach(doc => {
+                const project = doc.data();
+
+                // Skill-based filtering for freelancers
+                if (role === "freelancer" && userSkills.length > 0) {
+                    if (!userSkills.some(skill => project.skills.includes(skill))) {
+                        return; // skip non-matching projects
+                    }
+                }
+
+                container.innerHTML += `
+                    <div class="project-card">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
+                        <p><strong>Budget:</strong> ₹${project.budget}</p>
+                    </div>
+                `;
+            });
+        });
+}
+
+/* ===============================
+   LOAD MATCHED PROJECTS (FREELANCER PROFILE)
+================================= */
+async function loadMatchedProjects() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
+    const skills = doc.data().skills || [];
+
+    const projectsContainer = document.getElementById("projectsContainer");
+    if (!projectsContainer) return;
+
+    firebase.firestore().collection("projects")
+        .orderBy("createdAt", "desc")
+        .get()
+        .then(snapshot => {
+            projectsContainer.innerHTML = "";
+            snapshot.forEach(doc => {
+                const project = doc.data();
+                console.log("Freelancer:", freelancer.name, "Skills:", freelancer.skills);
+                if (skills.some(skill => project.skills.includes(skill))) {
+                    projectsContainer.innerHTML += `
+                        <div class="project-card">
+                            <h3>${project.title}</h3>
+                            <p>${project.description}</p>
+                            <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
+                            <p><strong>Budget:</strong> ₹${project.budget}</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+}
+
+/* ===============================
+   LOAD FREELANCERS (CLIENT VIEW)
+================================= */
+function loadFreelancers(skillFilter = "") {
+  console.log("Loading freelancers with filter:", skillFilter);
+  const container = document.getElementById("freelancersContainer");
+  if (!container) return;
+
+  firebase.firestore().collection("users")
+    .where("role", "==", "freelancer")
+    .get()
+    .then(snapshot => {
+      container.innerHTML = "";
+      snapshot.forEach(doc => {
+        const freelancer = doc.data();
+
+        // Ensure skills is always an array
+        const skills = Array.isArray(freelancer.skills) ? freelancer.skills : [];
+
+        // Skill filter logic (case-insensitive)
+        if (skillFilter && !skills.some(s => s.toLowerCase() === skillFilter.toLowerCase())) {
+          return;
+        }
+
+        container.innerHTML += `
+  <div class="freelancer-card">
+    <h3>${freelancer.name || "Unnamed Freelancer"}</h3>
+    <p><strong>Email:</strong> ${freelancer.email || "N/A"}</p>
+    <p><strong>Skills:</strong> ${skills.length ? skills.join(", ") : "No skills listed"}</p>
+    <p><strong>Resume:</strong> ${
+      freelancer.resumeLink 
+        ? `<a href="${freelancer.resumeLink}" target="_blank">View Resume</a>` 
+        : "Not provided"
+    }</p>
+    <button class="offer-btn" onclick="offerProject('${doc.id}')">Offer Project</button>
+  </div>
+`;
+
+      });
+    })
+    .catch(error => {
+      console.error("Error loading freelancers:", error);
+    });
+}
+
+
+
+// Filter button handler
+function filterFreelancers() {
+  const skill = document.getElementById("skillFilter").value.trim();
+  console.log("Filter button clicked, skill:", skill);
+  loadFreelancers(skill);
+}
+
+// Placeholder for offering project
+function offerProject(freelancerId) {
+  alert("Feature coming soon: Offer project to freelancer " + freelancerId);
+}
+
