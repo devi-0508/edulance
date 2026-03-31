@@ -345,40 +345,51 @@ async function loadMatchedProjects() {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
-    const skills = doc.data().skills || [];
+    const userDoc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+
+    const skills = userDoc.data()?.skills || [];
 
     const container = document.getElementById("projectsContainer");
     if (!container) return;
 
-    const snapshot = await firebase.firestore().collection("projects").get();
+    const snapshot = await firebase.firestore()
+        .collection("projects")
+        .get();
 
     container.innerHTML = "";
 
     for (const projectDoc of snapshot.docs) {
         const project = projectDoc.data();
 
-        if (skills.some(skill => project.skills.includes(skill))) {
+        const projectSkills = project.skills || [];
 
-            // 🔥 Get client email
+        if (skills.some(skill => projectSkills.includes(skill))) {
+
             let clientEmail = "Not available";
 
-            if (project.clientId) {
-                const clientDoc = await firebase.firestore()
-                    .collection("users")
-                    .doc(project.clientId)
-                    .get();
+if (project.clientId) {
+    try {
+        const clientDoc = await firebase.firestore()
+            .collection("users")
+            .doc(project.clientId)
+            .get();
 
-                if (clientDoc.exists) {
-                    clientEmail = clientDoc.data().email || "Not available";
-                }
-            }
+        if (clientDoc.exists && clientDoc.data().email) {
+            clientEmail = clientDoc.data().email;
+        }
+    } catch (error) {
+        console.error("Error fetching client:", error);
+    }
+}
 
             container.innerHTML += `
                 <div class="project-card">
                     <h3>${project.title}</h3>
                     <p>${project.description || ""}</p>
-                    <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
+                    <p><strong>Skills:</strong> ${projectSkills.join(", ")}</p>
                     <p><strong>Budget:</strong> ₹${project.budget}</p>
                     <p><strong>Client Email:</strong> 
                         <a href="mailto:${clientEmail}">${clientEmail}</a>
