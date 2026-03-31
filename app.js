@@ -318,58 +318,24 @@ function loadAllProjects(role, userId) {
     if (!container) return;
 
     firebase.firestore().collection("projects")
-    .onSnapshot(async snapshot => {
-        container.innerHTML = "";
+        .onSnapshot(async snapshot => {
+            container.innerHTML = "";
 
-        // ✅ Get user skills ONCE
-        let userSkills = [];
-        if (role === "freelancer") {
-            const userDoc = await firebase.firestore()
-                .collection("users")
-                .doc(userId)
-                .get();
-
-            userSkills = userDoc.data().skills || [];
-        }
-
-        // ✅ Loop properly (supports await)
-        for (const docSnap of snapshot.docs) {
-            const project = docSnap.data();
-
-            // ✅ Skill filtering
-            if (role === "freelancer" &&
-                !userSkills.some(skill => project.skills.includes(skill))) {
-                continue;
+            let userSkills = [];
+            if (role === "freelancer") {
+                const doc = await firebase.firestore().collection("users").doc(userId).get();
+                userSkills = doc.data().skills || [];
             }
 
-            // ✅ Fetch client email
-            let clientEmail = "Not available";
+            snapshot.forEach(doc => {
+                const project = doc.data();
 
-            if (project.clientId) {
-                const clientDoc = await firebase.firestore()
-                    .collection("users")
-                    .doc(project.clientId)
-                    .get();
+                if (role === "freelancer" &&
+                    !userSkills.some(skill => project.skills.includes(skill))) return;
 
-                if (clientDoc.exists) {
-                    clientEmail = clientDoc.data().email || "Not available";
-                }
-            }
-
-            // ✅ Display card
-            container.innerHTML += `
-                <div class="project-card">
-                    <h3>${project.title}</h3>
-                    <p>${project.description || ""}</p>
-                    <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
-                    <p><strong>Budget:</strong> ₹${project.budget}</p>
-                    <p><strong>Client Email:</strong> 
-                        <a href="mailto:${clientEmail}">${clientEmail}</a>
-                    </p>
-                </div>
-            `;
-        }
-    });
+                container.innerHTML += `<div><h3>${project.title}</h3></div>`;
+            });
+        });
 }
 
 /* ===============================
@@ -379,30 +345,22 @@ async function loadMatchedProjects() {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const userDoc = await firebase.firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get();
-
-    const skills = userDoc.data().skills || [];
+    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
+    const skills = doc.data().skills || [];
 
     const container = document.getElementById("projectsContainer");
     if (!container) return;
 
-    const snapshot = await firebase.firestore()
-        .collection("projects")
-        .get();
+    const snapshot = await firebase.firestore().collection("projects").get();
 
     container.innerHTML = "";
 
-    for (const docSnap of snapshot.docs) {
-        const project = docSnap.data();
-
-        // ✅ FIX: handle missing skills safely
-        if (!project.skills) continue;
+    for (const projectDoc of snapshot.docs) {
+        const project = projectDoc.data();
 
         if (skills.some(skill => project.skills.includes(skill))) {
 
+            // 🔥 Get client email
             let clientEmail = "Not available";
 
             if (project.clientId) {
