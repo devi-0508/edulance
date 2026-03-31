@@ -379,22 +379,30 @@ async function loadMatchedProjects() {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
-    const skills = doc.data().skills || [];
+    const userDoc = await firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+
+    const skills = userDoc.data().skills || [];
 
     const container = document.getElementById("projectsContainer");
     if (!container) return;
 
-    const snapshot = await firebase.firestore().collection("projects").get();
+    const snapshot = await firebase.firestore()
+        .collection("projects")
+        .get();
 
     container.innerHTML = "";
 
-    for (const projectDoc of snapshot.docs) {
-        const project = projectDoc.data();
+    for (const docSnap of snapshot.docs) {
+        const project = docSnap.data();
+
+        // ✅ FIX: handle missing skills safely
+        if (!project.skills) continue;
 
         if (skills.some(skill => project.skills.includes(skill))) {
 
-            // 🔥 Get client email
             let clientEmail = "Not available";
 
             if (project.clientId) {
