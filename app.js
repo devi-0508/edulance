@@ -366,54 +366,40 @@ async function loadMatchedProjects() {
 
         const projectSkills = project.skills || [];
 
-        if (skills.some(skill => projectSkills.includes(skill))) {
+        // ✅ safe matching
+        if (skills.length === 0 || skills.some(skill => projectSkills.includes(skill))) {
 
             let clientEmail = "Not available";
 
-if (project.clientId) {
-    try {
-        const clientDoc = await firebase.firestore()
-            .collection("users")
-            .doc(project.clientId)
-            .get();
+            // ✅ fetch client email safely
+            if (project.clientId) {
+                try {
+                    const clientDoc = await firebase.firestore()
+                        .collection("users")
+                        .doc(project.clientId)
+                        .get();
 
-        if (clientDoc.exists) {
-            const clientData = clientDoc.data();
-            console.log("Client Data:", clientData); // 🔍 DEBUG
+                    if (clientDoc.exists) {
+                        const clientData = clientDoc.data();
+                        console.log("Client Data:", clientData);
 
-            if (clientData.email) {
-                clientEmail = clientData.email;
+                        if (clientData.email) {
+                            clientEmail = clientData.email;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching client:", error);
+                }
             }
-        }
-    } catch (error) {
-        console.error("Error fetching client:", error);
-    }
-}
 
-if (project.clientId) {
-    try {
-        const clientDoc = await firebase.firestore()
-            .collection("users")
-            .doc(project.clientId)
-            .get();
-
-        if (clientDoc.exists && clientDoc.data().email) {
-            clientEmail = clientDoc.data().email;
-        }
-    } catch (error) {
-        console.error("Error fetching client:", error);
-    }
-}
-
+            // ✅ safe UI rendering
             container.innerHTML += `
                 <div class="project-card">
-                    <h3>${project.title}</h3>
+                    <h3>${project.title || "No Title"}</h3>
                     <p>${project.description || ""}</p>
                     <p><strong>Skills:</strong> ${projectSkills.join(", ")}</p>
-                    <p><strong>Budget:</strong> ₹${project.budget}</p>
-                    <p><strong>Client Email:</strong> 
-                        <p><strong>Client Email:</strong> ${clientEmail}</p>
-                    </p>
+                    <p><strong>Budget:</strong> ₹${project.budget || "N/A"}</p>
+                    <p><strong>Client Email:</strong> ${clientEmail}</p>
                 </div>
             `;
         }
