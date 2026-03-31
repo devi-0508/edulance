@@ -370,6 +370,8 @@ async function loadMatchedProjects() {
         if (skills.length === 0 || skills.some(skill => projectSkills.includes(skill))) {
 
             let clientEmail = "Not available";
+            console.log("Project:", project);
+console.log("Client ID:", project.clientId);
 
             // ✅ fetch client email safely
             if (project.clientId) {
@@ -391,7 +393,8 @@ async function loadMatchedProjects() {
                     console.error("Error fetching client:", error);
                 }
             }
-
+            console.log("Client exists:", clientDoc.exists);
+console.log("Client data:", clientDoc.data());
             // ✅ safe UI rendering
             container.innerHTML += `
                 <div class="project-card">
