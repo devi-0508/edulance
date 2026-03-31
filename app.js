@@ -354,12 +354,39 @@ async function loadMatchedProjects() {
     const snapshot = await firebase.firestore().collection("projects").get();
 
     container.innerHTML = "";
-    snapshot.forEach(doc => {
-        const project = doc.data();
+
+    for (const projectDoc of snapshot.docs) {
+        const project = projectDoc.data();
+
         if (skills.some(skill => project.skills.includes(skill))) {
-            container.innerHTML += `<div><h3>${project.title}</h3></div>`;
+
+            // 🔥 Get client email
+            let clientEmail = "Not available";
+
+            if (project.clientId) {
+                const clientDoc = await firebase.firestore()
+                    .collection("users")
+                    .doc(project.clientId)
+                    .get();
+
+                if (clientDoc.exists) {
+                    clientEmail = clientDoc.data().email || "Not available";
+                }
+            }
+
+            container.innerHTML += `
+                <div class="project-card">
+                    <h3>${project.title}</h3>
+                    <p>${project.description || ""}</p>
+                    <p><strong>Skills:</strong> ${project.skills.join(", ")}</p>
+                    <p><strong>Budget:</strong> ₹${project.budget}</p>
+                    <p><strong>Client Email:</strong> 
+                        <a href="mailto:${clientEmail}">${clientEmail}</a>
+                    </p>
+                </div>
+            `;
         }
-    });
+    }
 }
 
 /* ===============================
