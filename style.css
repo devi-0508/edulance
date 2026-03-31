@@ -303,3 +303,48 @@ button:hover {
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* Project Cards */
+.project-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 15px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect (looks nice in demo) */
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* Title */
+.project-card h3 {
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+/* Text */
+.project-card p {
+  margin: 6px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+/* Email link */
+.project-card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.project-card a:hover {
+  text-decoration: underline;
+}
+
+#projectsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
