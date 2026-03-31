@@ -377,6 +377,26 @@ if (project.clientId) {
             .doc(project.clientId)
             .get();
 
+        if (clientDoc.exists) {
+            const clientData = clientDoc.data();
+            console.log("Client Data:", clientData); // 🔍 DEBUG
+
+            if (clientData.email) {
+                clientEmail = clientData.email;
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching client:", error);
+    }
+}
+
+if (project.clientId) {
+    try {
+        const clientDoc = await firebase.firestore()
+            .collection("users")
+            .doc(project.clientId)
+            .get();
+
         if (clientDoc.exists && clientDoc.data().email) {
             clientEmail = clientDoc.data().email;
         }
