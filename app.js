@@ -412,7 +412,7 @@ if (project.clientId) {
                     <p><strong>Skills:</strong> ${projectSkills.join(", ")}</p>
                     <p><strong>Budget:</strong> ₹${project.budget}</p>
                     <p><strong>Client Email:</strong> 
-                        <a href="mailto:${clientEmail}">${clientEmail}</a>
+                        <p><strong>Client Email:</strong> ${clientEmail}</p>
                     </p>
                 </div>
             `;
